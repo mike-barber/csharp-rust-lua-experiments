@@ -41,6 +41,10 @@ namespace CSharpLuaTest
 
         static void Main(string[] args)
         {
+            VectorTests.AddVectors();
+            VectorTests.AddVectorsOperator();
+            VectorTests.AddVectorsWrapper();
+
             var p = new Program();
             p.Run();
 
