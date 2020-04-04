@@ -175,6 +175,11 @@ namespace CSharpLuaTest
             ")[0] as VectorWrapper;
             Console.WriteLine("compound " + compound);
 
+            var compound2 = state.DoString(@"
+                return v1 + v2 + v1 + v2
+            ")[0] as VectorWrapper;
+            Console.WriteLine("compound2 " + compound2);
+
             state.DoString(@"print(v1.mt)");
             state.DoString(@"print(v2.mt)");
             state.DoString(@"print(getmetatable(v1))");
