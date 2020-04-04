@@ -21,6 +21,7 @@ namespace CSharpLuaTest
             VectorTests.AddVectors();
             VectorTests.AddVectorsOperator();
             VectorTests.AddVectorsWrapper();
+            VectorTests.DictionaryTest();
 
             // setup for a relatively quick run
             var benchmarkConfig = DefaultConfig.Instance.With(

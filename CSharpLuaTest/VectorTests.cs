@@ -147,5 +147,29 @@ namespace CSharpLuaTest
             state.DoString(@"print(getmetatable(v2))");
         }
 
+        public static void DictionaryTest()
+        {
+            using var state = new Lua();
+            state.LoadCLRPackage();
+            state.DoString(@"
+                import('MathNet.Numerics.LinearAlgebra.Double')
+                import('CSharpLuaTest')
+            ");
+
+            var v1 = new VectorWrapper(V1());
+            var v2 = new VectorWrapper(V2());
+
+            var dict = new Dictionary<string, VectorWrapper>()
+            {
+                ["v1"] = v1,
+                ["v2"] = v2
+            };
+
+            state.DoString("function func(values) return values.v1 + values.v2 end");
+            var fn = state.GetFunction("func");
+            var add = fn.Call(dict)[0] as VectorWrapper;
+            Console.WriteLine("add " + add);
+        }
+
     }
 }
