@@ -1,5 +1,6 @@
 use ndarray::Array1;
-use rlua::{Function, Lua, MetaMethod, Result, UserData, UserDataMethods};
+use rlua::{Error, Function, Lua, MetaMethod, Result, UserData, UserDataMethods};
+use std::convert::TryFrom;
 
 #[derive(Clone, Debug)]
 struct ArrContainer<T>(Array1<T>);
@@ -25,6 +26,26 @@ impl UserData for ArrContainer<i32> {
             |_, (v1, v2): (ArrContainer<i32>, ArrContainer<i32>)| {
                 let s = v1.0 * v2.0;
                 Ok(ArrContainer(s))
+            },
+        );
+
+        methods.add_meta_function(
+            MetaMethod::Index,
+            |_, (arr, idx): (ArrContainer<i32>, i32)| {
+                let a = &arr.0;
+                
+                // change to zero-indexed, and convert to usize; return an error
+                // if the conversion fails (which it will do for negative values)
+                let i = usize::try_from(idx - 1)
+                    .map_err(|_| Error::RuntimeError("invalid index".to_owned()))?;
+
+                // check we're within range
+                if i >= a.shape()[0] {
+                    return Err(Error::RuntimeError("Invalid index".to_owned()));
+                }
+
+                // return the value
+                Ok(a[[i]])
             },
         );
     }
@@ -77,6 +98,9 @@ fn main() -> Result<()> {
 
         let arr_sum = ctx.load("arr1:sum()").eval::<i32>()?;
         println!("sum {}", arr_sum);
+
+        println!("first item {}", ctx.load("arr1[1]").eval::<i32>()?);
+        println!("third item {}", ctx.load("arr1[3]").eval::<i32>()?);
 
         Ok(())
     })?;
