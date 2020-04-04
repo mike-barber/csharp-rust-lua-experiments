@@ -40,7 +40,7 @@ namespace CSharpLuaTest
         }
 
 
-        public static void Test()
+        public static void SelfTest()
         {
             var me = new BasicFunctionTests();
 

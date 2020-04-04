@@ -2,50 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra.Double;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NLua;
 
-using MLA = MathNet.Numerics.LinearAlgebra;
 
 namespace CSharpLuaTest
 {
-    public class VectorWrapper
-    {
-        public readonly MLA.Vector<double> V;
-
-        public VectorWrapper(MLA.Vector<double> vector)
-        {
-            V = vector;
-        }
-
-        public static VectorWrapper operator *(VectorWrapper lhs, VectorWrapper rhs) => new VectorWrapper(lhs.V.Clone().PointwiseMultiply(rhs.V.Clone()));
-        public static VectorWrapper operator /(VectorWrapper lhs, VectorWrapper rhs) => new VectorWrapper(lhs.V.Clone().PointwiseDivide(rhs.V.Clone()));
-        public static VectorWrapper operator +(VectorWrapper lhs, VectorWrapper rhs) => new VectorWrapper(lhs.V.Clone().Add(rhs.V.Clone()));
-        public static VectorWrapper operator -(VectorWrapper lhs, VectorWrapper rhs) => new VectorWrapper(lhs.V.Clone().Subtract(rhs.V.Clone()));
-
-        public static VectorWrapper operator *(VectorWrapper lhs, double rhs) => new VectorWrapper(lhs.V.Clone() * rhs);
-        public static VectorWrapper operator /(VectorWrapper lhs, double rhs) => new VectorWrapper(lhs.V.Clone() / rhs);
-        public static VectorWrapper operator +(VectorWrapper lhs, double rhs) => new VectorWrapper(lhs.V.Clone() + rhs);
-        public static VectorWrapper operator -(VectorWrapper lhs, double rhs) => new VectorWrapper(lhs.V.Clone() - rhs);
-
-        public static VectorWrapper operator *(double lhs, VectorWrapper rhs) => new VectorWrapper(lhs * rhs.V.Clone());
-        public static VectorWrapper operator /(double lhs, VectorWrapper rhs) => new VectorWrapper(lhs / rhs.V.Clone());
-        public static VectorWrapper operator +(double lhs, VectorWrapper rhs) => new VectorWrapper(lhs + rhs.V.Clone());
-        public static VectorWrapper operator -(double lhs, VectorWrapper rhs) => new VectorWrapper(lhs - rhs.V.Clone());
-
-        public double this[int i]
-        {
-            get => V[i];
-            set => V[i] = value;
-        }
-
-        public override string ToString()
-        {
-            return "wrapper " + V.ToString();
-        }
-    }
-
-
     public class VectorTests
     {
         public static DenseVector V1() => new DenseVector(new double[] { 0, 1, 2, 3, 4 });
@@ -185,8 +146,6 @@ namespace CSharpLuaTest
             state.DoString(@"print(getmetatable(v1))");
             state.DoString(@"print(getmetatable(v2))");
         }
-
-
 
     }
 }
