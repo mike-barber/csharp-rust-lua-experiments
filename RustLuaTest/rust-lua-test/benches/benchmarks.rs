@@ -1,7 +1,7 @@
 use criterion::*;
-use ndarray::{arr1, Array1};
-use rlua::{Lua, Function};
 use custom_types::ArrContainer;
+use ndarray::{arr1, Array1};
+use rlua::{Function, Lua};
 
 fn get_a1() -> Array1<i32> {
     arr1(&(0..100).collect::<std::vec::Vec<_>>())
@@ -14,20 +14,14 @@ fn get_a2() -> Array1<i32> {
 fn bench_ndarray_multiply(b: &mut Criterion) {
     let a1 = get_a1();
     let a2 = get_a2();
-    b.bench_function("ndarray mult", |b| {
-        b.iter(|| {
-            &a1 * &a2
-        })
-    });
+    b.bench_function("ndarray mult", |b| b.iter(|| &a1 * &a2));
 }
 
 fn bench_ndarray_multiply_clone(b: &mut Criterion) {
     let a1 = get_a1();
     let a2 = get_a2();
     b.bench_function("ndarray mult / clone", |b| {
-        b.iter(|| {
-            a1.clone() * a2.clone()
-        })
+        b.iter(|| a1.clone() * a2.clone())
     });
 }
 
@@ -73,14 +67,17 @@ fn bench_lua_multiply_call(b: &mut Criterion) {
     let arr2 = ArrContainer(get_a2());
 
     lua.context(|ctx| {
-        ctx.load(r#"
+        ctx.load(
+            r#"
         function mult(a,b) 
             return a * b
         end
-        "#).exec()?;
-        
+        "#,
+        )
+        .exec()?;
         rlua::Result::<()>::Ok(())
-    }).unwrap();
+    })
+    .unwrap();
 
     b.bench_function("lua multiply / function call", |b| {
         b.iter(|| {
