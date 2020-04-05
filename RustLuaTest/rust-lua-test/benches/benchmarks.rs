@@ -4,11 +4,11 @@ use rlua::{Lua, Function};
 use custom_types::ArrContainer;
 
 fn get_a1() -> Array1<i32> {
-    arr1(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    arr1(&(0..100).collect::<std::vec::Vec<_>>())
 }
 
 fn get_a2() -> Array1<i32> {
-    arr1(&[11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+    arr1(&(100..200).collect::<std::vec::Vec<_>>())
 }
 
 fn bench_ndarray_multiply(b: &mut Criterion) {
@@ -58,8 +58,7 @@ fn bench_lua_multiply(b: &mut Criterion) {
                 globals.set("arr1", arr1.clone())?;
                 globals.set("arr2", arr2.clone())?;
 
-                let arr_mul = ctx.load("arr1 * arr2").eval::<ArrContainer<i32>>()?;
-                assert!(arr_mul.0[[0]] == 11);
+                let _ = ctx.load("arr1 * arr2").eval::<ArrContainer<i32>>()?;
 
                 rlua::Result::<()>::Ok(())
             })
@@ -89,8 +88,7 @@ fn bench_lua_multiply_call(b: &mut Criterion) {
                 let globals = ctx.globals();
                 let mult: Function = globals.get("mult")?;
 
-                let arr_mul: ArrContainer<i32> = mult.call((arr1.clone(), arr2.clone()))?;
-                assert!(arr_mul.0[[0]] == 11);
+                let _: ArrContainer<i32> = mult.call((arr1.clone(), arr2.clone()))?;
 
                 rlua::Result::<()>::Ok(())
             })
