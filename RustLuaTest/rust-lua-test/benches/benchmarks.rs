@@ -16,8 +16,7 @@ fn bench_ndarray_multiply(b: &mut Criterion) {
     let a2 = get_a2();
     b.bench_function("ndarray mult", |b| {
         b.iter(|| {
-            let res = &a1 * &a2;
-            res
+            &a1 * &a2
         })
     });
 }
@@ -27,8 +26,7 @@ fn bench_ndarray_multiply_clone(b: &mut Criterion) {
     let a2 = get_a2();
     b.bench_function("ndarray mult / clone", |b| {
         b.iter(|| {
-            let res = a1.clone() * a2.clone();
-            res
+            a1.clone() * a2.clone()
         })
     });
 }
