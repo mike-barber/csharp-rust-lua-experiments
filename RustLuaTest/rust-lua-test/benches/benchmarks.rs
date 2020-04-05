@@ -14,7 +14,7 @@ fn get_a2() -> Array1<i32> {
 fn bench_ndarray_multiply(b: &mut Criterion) {
     let a1 = get_a1();
     let a2 = get_a2();
-    b.bench_function("ndarray", |b| {
+    b.bench_function("ndarray mult", |b| {
         b.iter(|| {
             let res = &a1 * &a2;
             res
@@ -25,7 +25,7 @@ fn bench_ndarray_multiply(b: &mut Criterion) {
 fn bench_ndarray_multiply_clone(b: &mut Criterion) {
     let a1 = get_a1();
     let a2 = get_a2();
-    b.bench_function("ndarray", |b| {
+    b.bench_function("ndarray mult / clone", |b| {
         b.iter(|| {
             let res = a1.clone() * a2.clone();
             res
